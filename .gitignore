@@ -1,0 +1,35 @@
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+crash.*.log
+
+
+# Ignore override files as they are usually used to override resources locally and so
+# are not checked in
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Include override files you do wish to add to version control using negated pattern
+# !example_override.tf
+
+# Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
+# example: *tfplan*
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc
+
+
+#.terraform.lock.hcl not in th git ignore because of followin reasons
+# Consistency: Including .terraform.lock.hcl in your version control ensures that all team members and your deployment systems use the exact same provider versions. This leads to consistent behavior and avoids the â€œit works on my machineâ€ problem.
+# Security: The lock file can enhance security by preventing the automatic adoption of new provider versions that could potentially introduce breaking changes or vulnerabilities.
+# Reproducibility: If youâ€™re troubleshooting an issue or rolling back to a previous version, the lock file allows you to recreate the exact state of your providers at that point in time.
+

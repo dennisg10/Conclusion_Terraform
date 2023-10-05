@@ -1,0 +1,40 @@
+data "azurerm_client_config" "current" {
+}
+
+data "azurerm_subscription" "primary" {
+}
+
+data "azurerm_role_definition" "data_factory_contributor" {
+  name = "Data Factory Contributor"
+}
+
+data "azurerm_private_dns_zone" "datafactory" {
+  name                = "privatelink.datafactory.azure.net"
+  resource_group_name = "rg-nw-services"
+}
+
+data "azurerm_subnet" "priv_endpoints" {
+  name                 = "sn-priv-endpoints"
+  virtual_network_name = "vnet-nw-priv-endpoints"
+  resource_group_name  = "rg-nw-priv-endpoints"
+}
+
+data "azurerm_private_dns_zone" "datalake" {
+  name                = "privatelink.dfs.core.windows.net"
+  resource_group_name = "rg-nw-services"
+}
+
+data "azurerm_private_dns_zone" "blobstorage" {
+  name                = "privatelink.blob.core.windows.net"
+  resource_group_name = "rg-nw-services"
+}
+
+data "azurerm_private_dns_zone" "sqlserver" {
+  name                = "privatelink.database.windows.net"
+  resource_group_name = "rg-nw-services"
+}
+
+data "azurerm_private_dns_zone" "keyvault" {
+  name                = "privatelink.vaultcore.azure.net"
+  resource_group_name = "rg-nw-services"
+}

@@ -1,0 +1,29 @@
+resource "azurerm_firewall_policy_rule_collection_group" "dnat_rules" {
+  name               = "${data.azurerm_resource_group.nw-services.name}-policy-dnat_pup01"
+  firewall_policy_id = data.azurerm_firewall_policy.afw_policy.id
+  priority           = 700
+
+  nat_rule_collection {
+    name     = "DNAT_Pub_01"
+    priority = 700
+    action   = "Dnat"
+
+    dynamic "rule" {
+      for_each = local.sec_dnat_01
+      content {
+        name                  = rule.value.name
+        protocols             = rule.value.protocols
+        source_addresses      = rule.value.source_addresses
+        destination_addresses = rule.value.destination_addresses
+        destination_ports     = rule.value.destination_ports
+        translated_port       = rule.value.translated_port
+        translated_address    = rule.value.translated_address
+      }
+    }
+  }
+
+  depends_on = [
+    data.azurerm_firewall_policy.afw_policy
+  ]
+
+}

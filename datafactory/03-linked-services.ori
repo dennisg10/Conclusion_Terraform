@@ -1,0 +1,43 @@
+#Create a Self-Hosted Runtime 
+# This will be een Microsoft VM and is not prefferd by Customer
+
+# Create Linked services for a Blob Storage
+resource "azurerm_data_factory_linked_service_azure_blob_storage" "example" {
+  name              = "example"
+  data_factory_id   = azurerm_data_factory.example.id
+  connection_string = data.azurerm_storage_account.example.primary_connection_string
+}
+
+# Create Linked service for File Storage
+resource "azurerm_data_factory_linked_service_azure_file_storage" "example" {
+  name              = "example"
+  data_factory_id   = azurerm_data_factory.datafactory.id
+  connection_string = data.azurerm_storage_account.example.primary_connection_string
+}
+
+# Create a linked service for Key Vault
+resource "azurerm_data_factory_linked_service_key_vault" "dadp-kv" {
+  name            = "poc-kv"
+  data_factory_id = azurerm_data_factory.datafactory.id
+  key_vault_id    = azurerm_key_vault.dadp-kv.id
+}
+
+# Create a linked service for SQL Server with Key Vault PWD
+resource "azurerm_data_factory_linked_service_sql_server" "example" {
+  name              = "example"
+  data_factory_id   = azurerm_data_factory.datafactory.id
+  
+  connection_string = "Integrated Security=False;Data Source=test;Initial Catalog=test;User ID=test;"
+  key_vault_password {
+    linked_service_name = azurerm_data_factory_linked_service_key_vault.example.name
+    secret_name         = "secret"
+  }
+}
+
+ # Create a Managed Private Endpoint
+ resource "azurerm_data_factory_managed_private_endpoint" "pe_blob" {
+  name               = "blob_connection"
+  data_factory_id    = azurerm_data_factory.datafactory.id
+  target_resource_id = azurerm_storage_account.example.id
+  subresource_name   = "blob"
+}

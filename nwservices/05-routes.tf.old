@@ -1,0 +1,139 @@
+# Create route table for VPN Gateway
+resource "azurerm_route_table" "networking" {
+  name                          = "${var.rg_prefix}-rt-fw"
+  resource_group_name           = azurerm_resource_group.rg.name
+  location                      = azurerm_resource_group.rg.location
+  disable_bgp_route_propagation = false
+
+  route {
+    name                   = "route-to-beheer"
+    address_prefix         = "172.20.0.0/16"
+    next_hop_type          = "VirtualAppliance"
+    next_hop_in_ip_address = azurerm_firewall.afw.ip_configuration[0].private_ip_address
+  }
+
+  route {
+    name                   = "to-nw-dev"
+    address_prefix         = "172.23.0.0/16"
+    next_hop_type          = "VirtualAppliance"
+    next_hop_in_ip_address = azurerm_firewall.afw.ip_configuration[0].private_ip_address
+  }
+
+  route {
+    name                   = "to-nw-test"
+    address_prefix         = "172.17.0.0/16"
+    next_hop_type          = "VirtualAppliance"
+    next_hop_in_ip_address = azurerm_firewall.afw.ip_configuration[0].private_ip_address
+  }
+
+  route {
+    name                   = "to-nw-accept"
+    address_prefix         = "172.18.0.0/16"
+    next_hop_type          = "VirtualAppliance"
+    next_hop_in_ip_address = azurerm_firewall.afw.ip_configuration[0].private_ip_address
+  }
+
+  route {
+    name                   = "to-nw-prod"
+    address_prefix         = "172.19.0.0/16"
+    next_hop_type          = "VirtualAppliance"
+    next_hop_in_ip_address = azurerm_firewall.afw.ip_configuration[0].private_ip_address
+  }
+
+  route {
+    address_prefix         = "10.5.4.0/24"
+    name                   = "to-nw-mdp-tooling-dmz"
+    next_hop_in_ip_address = "172.16.0.196"
+    next_hop_type          = "VirtualAppliance"
+  }
+
+  route {
+    address_prefix         = "10.2.8.0/24"
+    name                   = "to-nw-mdp-accept-lb-dmz"
+    next_hop_in_ip_address = "172.16.0.196"
+    next_hop_type          = "VirtualAppliance"
+  }
+
+  route {
+    address_prefix         = "10.3.8.0/24"
+    name                   = "to-nw-mdp-prod-lb-dmz"
+    next_hop_in_ip_address = "172.16.0.196"
+    next_hop_type          = "VirtualAppliance"
+  }
+
+  dynamic "route" {
+    for_each = var.priv_endpoint_routes
+    content {
+      name                   = route.value.name
+      address_prefix         = route.value.address_prefix
+      next_hop_type          = route.value.next_hop_type
+      next_hop_in_ip_address = azurerm_firewall.afw.ip_configuration[0].private_ip_address
+    }
+  }
+
+  tags = var.tags
+}
+
+# Link route table for networking to VPN Gateway Subnet
+resource "azurerm_subnet_route_table_association" "networking" {
+  subnet_id      = azurerm_subnet.gwsubnet.id
+  route_table_id = azurerm_route_table.networking.id
+}
+
+
+# Create route table for Juniper Int subnet
+resource "azurerm_route_table" "juniperint" {
+  name                          = "${var.rg_prefix}-rt-juniper-int"
+  resource_group_name           = azurerm_resource_group.rg.name
+  location                      = azurerm_resource_group.rg.location
+  disable_bgp_route_propagation = false
+
+  route {
+    name                   = "route-to-beheer"
+    address_prefix         = "172.20.0.0/16"
+    next_hop_type          = "VirtualAppliance"
+    next_hop_in_ip_address = azurerm_firewall.afw.ip_configuration[0].private_ip_address
+  }
+
+  route {
+    name                   = "to-nw-dev"
+    address_prefix         = "172.23.0.0/16"
+    next_hop_type          = "VirtualAppliance"
+    next_hop_in_ip_address = azurerm_firewall.afw.ip_configuration[0].private_ip_address
+  }
+
+  route {
+    name                   = "to-nw-test"
+    address_prefix         = "172.17.0.0/16"
+    next_hop_type          = "VirtualAppliance"
+    next_hop_in_ip_address = azurerm_firewall.afw.ip_configuration[0].private_ip_address
+  }
+
+  route {
+    name                   = "to-nw-accept"
+    address_prefix         = "172.18.0.0/16"
+    next_hop_type          = "VirtualAppliance"
+    next_hop_in_ip_address = azurerm_firewall.afw.ip_configuration[0].private_ip_address
+  }
+
+  route {
+    name                   = "to-nw-prod"
+    address_prefix         = "172.19.0.0/16"
+    next_hop_type          = "VirtualAppliance"
+    next_hop_in_ip_address = azurerm_firewall.afw.ip_configuration[0].private_ip_address
+  }
+
+  route {
+    name                   = "route-to-praag"
+    address_prefix         = "198.141.240.0/22"
+    next_hop_type          = "VirtualAppliance"
+    next_hop_in_ip_address = azurerm_firewall.afw.ip_configuration[0].private_ip_address
+  }
+
+}
+
+# Link route table for networking to VPN Gateway Subnet
+resource "azurerm_subnet_route_table_association" "juniperint" {
+  subnet_id      = azurerm_subnet.juniperint.id
+  route_table_id = azurerm_route_table.juniperint.id
+}
