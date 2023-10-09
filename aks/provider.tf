@@ -27,12 +27,12 @@ provider "azurerm" {
 
 terraform {
   backend "azurerm" {
-    storage_account_name = "sadgterraform001sf"
+    storage_account_name = "sadgterraformf9b38b"
     container_name       = "akscltest"
     key                  = "akscltestgit.terraform.tfstate"
     resource_group_name  = "rg-dgterraform"
     use_azuread_auth     = false
-    subscription_id      = "2e1546b8-6f98-42fc-91df-3a94db0d80ab"
+    subscription_id      = "c4c00ad0-34a0-4443-9487-8f258cfdcc24"
 
   }
 }

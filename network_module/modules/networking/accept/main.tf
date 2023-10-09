@@ -9,12 +9,12 @@ terraform {
 
 terraform {
   backend "azurerm" {
-    storage_account_name = "sadgterraform001sf"
+    storage_account_name = "sadgterraformf9b38b"
     container_name       = "networkmodules"
     key                  = "network-modules-accept.terraform.tfstate"
     resource_group_name  = "rg-dgterraform"
     use_azuread_auth     = false
-    subscription_id      = "274ed5a4-bc5f-4f7a-9b29-6bf02b73f2c8"
+    subscription_id      = "c4c00ad0-34a0-4443-9487-8f258cfdcc24"
 
   }
 }
